@@ -1,0 +1,1 @@
+from querystar.triggers import slack

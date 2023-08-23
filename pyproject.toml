@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "querystar"
+version = "0.1.0"
+description = ""
+authors = ["Adithya Krishnan <krishsandeep@gmail.com>"]
+readme = "README.md"
+packages = [{include = "querystar", from = "src"}]
+
+[tool.poetry.scripts]
+querystar = "querystar.cli:main"
+qs = "querystar.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.1.7"
+websockets = "^11.0.3"
+requests = "^2.31.0"
+python-dotenv = "^1.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+autopep8 = "^2.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
