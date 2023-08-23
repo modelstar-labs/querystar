@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "querystar"
 version = "0.1.0"
-description = ""
+description = "Python framework for workflow automations."
 authors = ["Adithya Krishnan <krishsandeep@gmail.com>"]
 readme = "README.md"
+license = "Apache-2.0"
+homepage = "https://querystar.io"
+repository = "https://github.com/modelstar-labs/querystar"
 packages = [{include = "querystar", from = "src"}]
 
 [tool.poetry.scripts]
