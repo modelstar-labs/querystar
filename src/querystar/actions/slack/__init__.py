@@ -46,7 +46,7 @@ def find_message(query: str,
         event='find_message',
         client_id=_client_id)
     payload = {'query': query, 'count': count,
-              'sort': sort, 'sort_direction': sort_direction}
+              'sort': sort, 'sort_dir': sort_direction}
     data = _action_client.fire(payload)
     click.echo('Finished:: actions.slack.find_message')
     return data
