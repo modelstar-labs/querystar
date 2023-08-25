@@ -14,3 +14,5 @@ data = qs.actions.slack.add_message(
     channel_id='C05LXN9BGKY',
     message=f'A kudos was sent at {time_now} with the text {text_message}')
 print(data)
+data = qs.actions.slack.find_message(query='kudos')
+print(data)
