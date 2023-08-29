@@ -14,7 +14,7 @@ class ClientConnection:
         self.client_id = client_id
 
     @staticmethod
-    async def _trigger(ws_client_url: str, filter_function: callable = None, filter_params: dict = {}):
+    async def _trigger(ws_client_url: str, filter_function: callable = None, filter_params: dict = {}) -> dict:
         async with websockets.connect(ws_client_url) as websocket:
             headers_send = {
                 "Authorization": f"Bearer {settings.querystar_token}"}
@@ -40,7 +40,7 @@ class ClientConnection:
                     else:
                         return _data
 
-    def listen(self, params: dict = {}, filter_function: callable = None, filter_params: dict = {}):
+    def listen(self, params: dict = {}, filter_function: callable = None, filter_params: dict = {}) -> dict:
         _host = settings.querystar_server_host
         _ssl = settings.ssl
         _route = f"client/trigger/{self.integration}/{self.event}/{self.client_id}"
@@ -52,7 +52,7 @@ class ClientConnection:
             _ws_client_url, filter_function, filter_params))
         return data
 
-    def fire(self, payload: dict = {}):
+    def fire(self, payload: dict = {}) -> dict:
         headers = {
             'Authorization': f'Bearer {settings.querystar_token}',
             'Content-type': 'application/json'

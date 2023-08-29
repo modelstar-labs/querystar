@@ -3,8 +3,6 @@ from uuid import uuid4
 from querystar.client import ClientConnection
 
 
-# Actions: with these 2 actions, we can replicate Gene's SAL9001 bot
-# in the CTO Slacker
 def add_message(channel_id: str,
                 message: str,
                 thread_ts: str = '',
@@ -29,6 +27,23 @@ def add_message(channel_id: str,
         payload['thread_ts'] = thread_ts
     data = _action_client.fire(payload)
     click.echo('Finished:: actions.slack.add_message')
+    return data
+
+def find_user(user_id: str):
+    """
+    All selected parameter's names match Slack http API arguments.
+    HTTP API: https://api.slack.com/methods/users.info
+    Scopes: users:read    
+    """
+    click.echo('Running:: actions.slack.user_info')
+    _client_id = str(uuid4())
+    _action_client = ClientConnection(
+        integration='slack',
+        event='user_info',
+        client_id=_client_id)
+    payload = {'user': user_id}
+    data = _action_client.fire(payload)
+    click.echo('Finished:: actions.slack.user_info')
     return data
 
 

@@ -68,6 +68,29 @@ def new_message(channel_id: str = None,
                     return False
             else:
                 return False
+            
+        # Check for trigger_for_bot_messages
+        filter_trigger_for_bot_messages = filter_params.get('trigger_for_bot_messages')
+        if filter_trigger_for_bot_messages:            
+            # check user info
+            user_id = data.get('user', None)
+            if user_id:
+                _client_id = str(uuid4())
+                _action_client = ClientConnection(
+                    integration='slack',
+                    event='user_info',
+                    client_id=_client_id)
+                payload = {'user': user_id}
+                user_info = _action_client.fire(payload).get('user', None)
+                if user_info:
+                    if user_info['is_bot']:                        
+                        return False
+                    else:                        
+                        return True
+                else:
+                    return False
+            else:
+                return False
 
         return True
 
