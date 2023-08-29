@@ -2,9 +2,6 @@ import click
 from querystar.client import ClientConnection
 from uuid import uuid4
 
-# Events = triggers. This one trigger can cover lots of user cases already.
-# Let's start with it
-
 
 def new_message(channel_id: str = None,
                 mentioned_user_id: str = None,

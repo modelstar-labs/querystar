@@ -7,10 +7,10 @@ from querystar.client import ClientConnection
 # in the CTO Slacker
 def add_message(channel_id: str,
                 message: str,
-                icon_emoji: str = '',
-                icon_url: str = '',
+                thread_ts: str = '',
                 reply_broadcast: bool = False,
-                thread_ts: str = ''):
+                icon_emoji: str = '',
+                icon_url: str = ''):
     """
     All selected parameter's names match Slack http API arguments.
     HTTP API: https://api.slack.com/methods/chat.postMessage
@@ -23,7 +23,10 @@ def add_message(channel_id: str,
         integration='slack',
         event='add_message',
         client_id=_client_id)
-    payload = {'channel': channel_id, 'text': message}
+    payload = {'channel': channel_id, 'text': message,
+               'reply_broadcast': reply_broadcast}
+    if thread_ts != '':
+        payload['thread_ts'] = thread_ts
     data = _action_client.fire(payload)
     click.echo('Finished:: actions.slack.add_message')
     return data
@@ -46,7 +49,7 @@ def find_message(query: str,
         event='find_message',
         client_id=_client_id)
     payload = {'query': query, 'count': count,
-              'sort': sort, 'sort_dir': sort_direction}
+               'sort': sort, 'sort_dir': sort_direction}
     data = _action_client.fire(payload)
     click.echo('Finished:: actions.slack.find_message')
     return data
