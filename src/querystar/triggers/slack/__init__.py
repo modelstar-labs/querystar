@@ -1,6 +1,5 @@
 import click
 from querystar.client import ClientConnection
-from uuid import uuid4
 
 
 def new_message(channel_id: str = None,
@@ -25,11 +24,7 @@ def new_message(channel_id: str = None,
     Scopes: channels:history, groups:history
     """
     click.echo('Running:: triggers.slack.new_message')
-    _client_id = str(uuid4())
-    _trigger_client = ClientConnection(
-        integration='slack',
-        event='new_message',
-        client_id=_client_id)
+    _trigger_client = ClientConnection()
 
     filter_params = {
         'channel_id': channel_id,
@@ -68,26 +63,26 @@ def new_message(channel_id: str = None,
                     return False
             else:
                 return False
-            
+
         # Check for trigger_for_bot_messages
-        # if trigger_for_bot_messages = False => if_bot => return False 
+        # if trigger_for_bot_messages = False => if_bot => return False
         # if trigger_for_bot_messages = True => if_bot => return True
-        filter_trigger_for_bot_messages = filter_params.get('trigger_for_bot_messages')
-        if not filter_trigger_for_bot_messages:            
-            # check user info
+        filter_trigger_for_bot_messages = filter_params.get(
+            'trigger_for_bot_messages')
+        if not filter_trigger_for_bot_messages:
+            # check user info            
             user_id = data.get('user', None)
-            if user_id:
-                _client_id = str(uuid4())
-                _action_client = ClientConnection(
+            if user_id:                
+                _action_client = ClientConnection()
+                payload = {'user': user_id}
+                user_info = _action_client.fire(
                     integration='slack',
                     event='user_info',
-                    client_id=_client_id)
-                payload = {'user': user_id}
-                user_info = _action_client.fire(payload).get('user', None)
+                    payload=payload).get('user', None)                
                 if user_info:
-                    if user_info['is_bot']:                        
+                    if user_info['is_bot']:
                         return False
-                    else:                        
+                    else:
                         return True
                 else:
                     return False
@@ -97,6 +92,8 @@ def new_message(channel_id: str = None,
         return True
 
     data = _trigger_client.listen(
+        integration='slack',
+        event='new_message',
         filter_function=filter_function,
         filter_params=filter_params)
 

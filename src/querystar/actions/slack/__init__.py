@@ -16,18 +16,17 @@ def add_message(channel_id: str,
     Rate limit: 1 per second, short burst ok, but no guarantee to send.
     """
     click.echo('Running:: actions.slack.add_message')
-    _client_id = str(uuid4())
-    _action_client = ClientConnection(
-        integration='slack',
-        event='add_message',
-        client_id=_client_id)
+    _action_client = ClientConnection()
     payload = {'channel': channel_id, 'text': message,
                'reply_broadcast': reply_broadcast}
     if thread_ts != '':
         payload['thread_ts'] = thread_ts
-    data = _action_client.fire(payload)
+    data = _action_client.fire(integration='slack',
+                               event='add_message',
+                               payload=payload)
     click.echo('Finished:: actions.slack.add_message')
     return data
+
 
 def find_user(user_id: str):
     """
@@ -36,13 +35,11 @@ def find_user(user_id: str):
     Scopes: users:read    
     """
     click.echo('Running:: actions.slack.user_info')
-    _client_id = str(uuid4())
-    _action_client = ClientConnection(
-        integration='slack',
-        event='user_info',
-        client_id=_client_id)
+    _action_client = ClientConnection()
     payload = {'user': user_id}
-    data = _action_client.fire(payload)
+    data = _action_client.fire(integration='slack',
+                               event='user_info',
+                               payload=payload)
     click.echo('Finished:: actions.slack.user_info')
     return data
 
@@ -58,13 +55,11 @@ def find_message(query: str,
     Rate limit: 20+ per minute, occasional busts ok, ideally <50
     """
     click.echo('Running:: actions.slack.find_message')
-    _client_id = str(uuid4())
-    _action_client = ClientConnection(
-        integration='slack',
-        event='find_message',
-        client_id=_client_id)
+    _action_client = ClientConnection()
     payload = {'query': query, 'count': count,
                'sort': sort, 'sort_dir': sort_direction}
-    data = _action_client.fire(payload)
+    data = _action_client.fire(integration='slack',
+                               event='find_message',
+                               payload=payload)
     click.echo('Finished:: actions.slack.find_message')
     return data

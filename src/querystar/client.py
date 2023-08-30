@@ -3,15 +3,14 @@ import click
 import asyncio
 import requests
 import websockets
+from uuid import uuid4
 from websockets.client import WebSocketClientProtocol
 from querystar.settings import settings
 
 
 class ClientConnection:
-    def __init__(self, integration: str, event: str, client_id: str):
-        self.integration = integration
-        self.event = event
-        self.client_id = client_id
+    def __init__(self):
+        self.client_id = str(uuid4())
 
     @staticmethod
     async def _trigger(ws_client_url: str, filter_function: callable = None, filter_params: dict = {}) -> dict:
@@ -40,10 +39,15 @@ class ClientConnection:
                     else:
                         return _data
 
-    def listen(self, params: dict = {}, filter_function: callable = None, filter_params: dict = {}) -> dict:
+    def listen(self,
+               integration: str,
+               event: str,
+               params: dict = {},
+               filter_function: callable = None,
+               filter_params: dict = {}) -> dict:
         _host = settings.querystar_server_host
         _ssl = settings.ssl
-        _route = f"client/trigger/{self.integration}/{self.event}/{self.client_id}"
+        _route = f"client/trigger/{integration}/{event}/{self.client_id}"
         if _ssl:
             _ws_client_url = f"wss://{_host}/{_route}"
         else:
@@ -52,14 +56,14 @@ class ClientConnection:
             _ws_client_url, filter_function, filter_params))
         return data
 
-    def fire(self, payload: dict = {}) -> dict:
+    def fire(self, integration: str, event: str, payload: dict = {}) -> dict:
         headers = {
             'Authorization': f'Bearer {settings.querystar_token}',
             'Content-type': 'application/json'
         }
         _host = settings.querystar_server_host
         _ssl = settings.ssl
-        _route = f"client/action/{self.integration}/{self.event}/{self.client_id}"
+        _route = f"client/action/{integration}/{event}/{self.client_id}"
         if _ssl:
             _http_client_url = f"https://{_host}/{_route}"
         else:
