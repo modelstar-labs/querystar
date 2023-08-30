@@ -70,8 +70,10 @@ def new_message(channel_id: str = None,
                 return False
             
         # Check for trigger_for_bot_messages
+        # if trigger_for_bot_messages = False => if_bot => return False 
+        # if trigger_for_bot_messages = True => if_bot => return True
         filter_trigger_for_bot_messages = filter_params.get('trigger_for_bot_messages')
-        if filter_trigger_for_bot_messages:            
+        if not filter_trigger_for_bot_messages:            
             # check user info
             user_id = data.get('user', None)
             if user_id:
