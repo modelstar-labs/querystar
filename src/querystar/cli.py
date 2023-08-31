@@ -4,6 +4,7 @@ import time
 import types
 import sys
 from querystar.commands.run import compile_source_code, build_source_module
+from querystar.globals import _counter
 
 
 @click.group()
@@ -32,6 +33,8 @@ def run(ctx, target: str):
     bytecode = compile_source_code(target_path)
     module = build_source_module(target_path)
 
+    _counter.update_status('from inside')
+
     try:
         while True:
             try:
@@ -43,7 +46,7 @@ def run(ctx, target: str):
                 # <class 'websockets.exceptions.ConnectionClosedError'>
                 # TODO: Implement exponential retries
                 break
-            # time.sleep(1)
+            time.sleep(1)
             # break
     except KeyboardInterrupt:
         click.echo(f"\n\nQueryStar stopped by user.\n")

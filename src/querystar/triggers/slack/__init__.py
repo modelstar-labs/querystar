@@ -1,5 +1,6 @@
 import click
-from querystar.client import ClientConnection
+from querystar.globals import _client_connection
+
 
 
 def new_message(channel_id: str = None,
@@ -24,7 +25,6 @@ def new_message(channel_id: str = None,
     Scopes: channels:history, groups:history
     """
     click.echo('Running:: triggers.slack.new_message')
-    _trigger_client = ClientConnection()
 
     filter_params = {
         'channel_id': channel_id,
@@ -70,15 +70,14 @@ def new_message(channel_id: str = None,
         filter_trigger_for_bot_messages = filter_params.get(
             'trigger_for_bot_messages')
         if not filter_trigger_for_bot_messages:
-            # check user info            
+            # check user info
             user_id = data.get('user', None)
-            if user_id:                
-                _action_client = ClientConnection()
+            if user_id:
                 payload = {'user': user_id}
-                user_info = _action_client.fire(
+                user_info = _client_connection.fire(
                     integration='slack',
                     event='user_info',
-                    payload=payload).get('user', None)                
+                    payload=payload).get('user', None)
                 if user_info:
                     if user_info['is_bot']:
                         return False
@@ -90,8 +89,8 @@ def new_message(channel_id: str = None,
                 return False
 
         return True
-
-    data = _trigger_client.listen(
+        
+    data = _client_connection.listen(
         integration='slack',
         event='new_message',
         filter_function=filter_function,
