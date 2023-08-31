@@ -42,18 +42,18 @@ def find_user(user_id: str):
     return data
 
 
-def find_chat(channel_id: str, message_ts: str):
+def find_permalink(channel_id: str, message_ts: str):
     """
     All selected parameter's names match Slack http API arguments.
     HTTP API: https://api.slack.com/methods/chat.getPermalink
     Scopes: None
     """
-    click.echo('Running:: actions.slack.find_chat')
+    click.echo('Running:: actions.slack.find_permalink')
     payload = {'channel': channel_id, 'message_ts': message_ts}
     data = _client_connection.fire(integration='slack',
-                                   event='find_chat',
+                                   event='find_permalink',
                                    payload=payload)
-    click.echo('Finished:: actions.slack.find_chat')
+    click.echo('Finished:: actions.slack.find_permalink')
     return data
 
 
