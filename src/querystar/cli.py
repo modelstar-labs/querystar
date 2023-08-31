@@ -1,7 +1,5 @@
 import os
 import click
-import time
-import types
 import sys
 from querystar.commands.run import compile_source_code, build_source_module
 
@@ -38,6 +36,7 @@ def run(ctx, target: str):
                 exec(bytecode, module.__dict__)
             except Exception as e:
                 click.echo(f"Error executing '{e}' of type {type(e)}.")
+                raise e
                 # TODO: Handle the following errors
                 # <class 'ConnectionRefusedError'>
                 # <class 'websockets.exceptions.ConnectionClosedError'>
