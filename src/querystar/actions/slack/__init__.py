@@ -1,6 +1,6 @@
 import click
 from uuid import uuid4
-from querystar.client import ClientConnection
+from querystar.client import _client_connection
 
 
 def add_message(channel_id: str,
@@ -16,18 +16,16 @@ def add_message(channel_id: str,
     Rate limit: 1 per second, short burst ok, but no guarantee to send.
     """
     click.echo('Running:: actions.slack.add_message')
-    _client_id = str(uuid4())
-    _action_client = ClientConnection(
-        integration='slack',
-        event='add_message',
-        client_id=_client_id)
     payload = {'channel': channel_id, 'text': message,
                'reply_broadcast': reply_broadcast}
     if thread_ts != '':
         payload['thread_ts'] = thread_ts
-    data = _action_client.fire(payload)
+    data = _client_connection.fire(integration='slack',
+                                   event='add_message',
+                                   payload=payload)
     click.echo('Finished:: actions.slack.add_message')
     return data
+
 
 def find_user(user_id: str):
     """
@@ -35,15 +33,27 @@ def find_user(user_id: str):
     HTTP API: https://api.slack.com/methods/users.info
     Scopes: users:read    
     """
-    click.echo('Running:: actions.slack.user_info')
-    _client_id = str(uuid4())
-    _action_client = ClientConnection(
-        integration='slack',
-        event='user_info',
-        client_id=_client_id)
+    click.echo('Running:: actions.slack.find_user')
     payload = {'user': user_id}
-    data = _action_client.fire(payload)
-    click.echo('Finished:: actions.slack.user_info')
+    data = _client_connection.fire(integration='slack',
+                                   event='find_user',
+                                   payload=payload)
+    click.echo('Finished:: actions.slack.find_user')
+    return data
+
+
+def find_chat(channel_id: str, message_ts: str):
+    """
+    All selected parameter's names match Slack http API arguments.
+    HTTP API: https://api.slack.com/methods/chat.getPermalink
+    Scopes: None
+    """
+    click.echo('Running:: actions.slack.find_chat')
+    payload = {'channel': channel_id, 'message_ts': message_ts}
+    data = _client_connection.fire(integration='slack',
+                                   event='find_chat',
+                                   payload=payload)
+    click.echo('Finished:: actions.slack.find_chat')
     return data
 
 
@@ -58,13 +68,10 @@ def find_message(query: str,
     Rate limit: 20+ per minute, occasional busts ok, ideally <50
     """
     click.echo('Running:: actions.slack.find_message')
-    _client_id = str(uuid4())
-    _action_client = ClientConnection(
-        integration='slack',
-        event='find_message',
-        client_id=_client_id)
     payload = {'query': query, 'count': count,
                'sort': sort, 'sort_dir': sort_direction}
-    data = _action_client.fire(payload)
+    data = _client_connection.fire(integration='slack',
+                                   event='find_message',
+                                   payload=payload)
     click.echo('Finished:: actions.slack.find_message')
     return data
