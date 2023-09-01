@@ -1,5 +1,4 @@
 import click
-from uuid import uuid4
 from querystar.client import _client_connection
 
 

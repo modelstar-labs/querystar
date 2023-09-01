@@ -1,12 +1,12 @@
 import click
 from querystar.client import _client_connection
-from uuid import uuid4
 
 
 def new_message(channel_id: str = None,
                 mentioned_user_id: str = None,
                 trigger_string: str = None,
-                trigger_for_bot_messages: bool = False):
+                trigger_for_bot_messages: bool = False,
+                trigger_for_op_only: bool = False):
     """
     :param str channel_id: trigger if event['channel'] matches the given channel
     :param str mentioned_user_id: trigger if event['user'] matches the given user id.
@@ -21,6 +21,7 @@ def new_message(channel_id: str = None,
             2) We need to subscribe to both public channel and private channel
             Public channel message API: https://api.slack.com/events/message.channels
             Private channel message API: https://api.slack.com/events/message.groups
+    : param bool trigger_for_op_only: whether triggered by original post only    
 
     Scopes: channels:history, groups:history
     """
@@ -87,6 +88,18 @@ def new_message(channel_id: str = None,
                     return False
             else:
                 return False
+
+        # Check for orignial post message only
+        # if trigger_for_op_only = False => return True
+        # if trigger_for_op_only = True => if original post => return True
+        filter_trigger_for_op_only = filter_params.get('trigger_for_op_only')
+        if filter_trigger_for_op_only:
+            # a reply will have thread_ts, for original post thread_ts = None
+            thread_ts = data.get('thread_ts', None)
+            if thread_ts:
+                return False
+            else:
+                return True
 
         return True
 
