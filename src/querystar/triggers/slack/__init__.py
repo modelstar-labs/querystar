@@ -31,7 +31,8 @@ def new_message(channel_id: str = None,
         'channel_id': channel_id,
         'mentioned_user_id': mentioned_user_id,
         'trigger_string': trigger_string,
-        'trigger_for_bot_messages': trigger_for_bot_messages
+        'trigger_for_bot_messages': trigger_for_bot_messages,
+        'trigger_for_op_only': trigger_for_op_only
     }
 
     def filter_function(data: dict, filter_params: dict):
@@ -82,8 +83,6 @@ def new_message(channel_id: str = None,
                 if user_info:
                     if user_info['is_bot']:
                         return False
-                    else:
-                        return True
                 else:
                     return False
             else:
@@ -98,8 +97,6 @@ def new_message(channel_id: str = None,
             thread_ts = data.get('thread_ts', None)
             if thread_ts:
                 return False
-            else:
-                return True
 
         return True
 
