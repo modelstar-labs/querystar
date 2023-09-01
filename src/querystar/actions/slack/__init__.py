@@ -4,7 +4,9 @@ from querystar.client import _client_connection
 
 
 def add_message(channel_id: str,
-                message: str,
+                text: str = None,
+                attachments: list = None,
+                blocks: list = None,
                 thread_ts: str = '',
                 reply_broadcast: bool = False,
                 icon_emoji: str = '',
@@ -16,8 +18,15 @@ def add_message(channel_id: str,
     Rate limit: 1 per second, short burst ok, but no guarantee to send.
     """
     click.echo('Running:: actions.slack.add_message')
-    payload = {'channel': channel_id, 'text': message,
+    payload = {'channel': channel_id,                
                'reply_broadcast': reply_broadcast}
+    if text is not None:
+        payload['text'] = text
+    if attachments is not None:
+        payload['attachments'] = attachments
+    if blocks is not None:
+        payload['blocks'] = blocks
+    
     if thread_ts != '':
         payload['thread_ts'] = thread_ts
     data = _client_connection.fire(integration='slack',
