@@ -107,3 +107,23 @@ def new_message(channel_id: str = None,
 
     click.echo('Finished:: triggers.slack.new_message')
     return data
+
+
+def new_reaction(channel_id: str = None,
+                message_ts: str = None,
+                reaction: str = None,
+                user_id: str = None,
+                trigger_for_message_only = True):
+    """
+    :param str channel_id: trigger if event['item']['channel'] matches the given channel
+    :param str message_ts: trigger if event['item']['ts'] matches the given ts
+    :param str reaction: trigger if event['reaction'] matches the given reaction str, e.g. 'thumbup'.
+    :param str user_id: trigger if event['user'] matches the given user id
+    :param bool trigger_for_message_only: when this is set to True, trigger if event['item']['type']=='message'
+
+    Note: 
+    All filters are composited using 'AND' logic
+    Reaction_added event message API: https://api.slack.com/events/reaction_added
+    Scopes: reactions:read
+    """
+    pass
