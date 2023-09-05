@@ -20,10 +20,14 @@ def get_qs_token():
     raise Exception(
         "No `QUERYSTAR_TOKEN` found in environment variables or .env file")
 
+
 @dataclass
 class QuerystarSettings():
-    ssl: bool = True
-    querystar_server_host: str = 'dev-v1.test.server-xauto.api.querystar.io'    
+    # ssl: bool = True
+    ssl: bool = False
+    # querystar_server_host: str = 'dev-v1.test.server-xauto.api.querystar.io'
+    # querystar_server_host: str = 'tnlsvrxauto.querystar.io'
+    querystar_server_host: str = '127.0.0.1:8000'
     querystar_token: str = field(init=False)
 
     def __post_init__(self):

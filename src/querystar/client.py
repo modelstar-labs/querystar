@@ -6,6 +6,7 @@ import websockets
 from uuid import uuid4
 from websockets.client import WebSocketClientProtocol
 from querystar.settings import settings
+from querystar.exceptions import BadRequestException, UnauthorizedException
 
 
 class ClientConnection:
@@ -16,7 +17,7 @@ class ClientConnection:
     async def _trigger(ws_client_url: str,
                        filter_function: callable = None,
                        filter_params: dict = {}) -> dict:
-        
+
         async with websockets.connect(ws_client_url) as websocket:
             headers_send = {
                 "Authorization": f"Bearer {settings.querystar_token}"}
@@ -75,6 +76,18 @@ class ClientConnection:
         data = requests.post(
             _http_client_url, headers=headers, data=json.dumps(payload))
         json_data = data.json()
+
+        if json_data.get('error'):
+            if integration == 'slack':
+                _context = json_data.get('error')
+                raise BadRequestException(_context)
+            elif integration == 'sheets':
+                _context = json_data.get('error').get('message')
+                raise BadRequestException(_context)
+            else:
+                _context = 'Unknown error context.'
+                raise BadRequestException(_context)
+            
         return json_data
 
 

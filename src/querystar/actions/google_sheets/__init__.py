@@ -1,3 +1,7 @@
+import click
+from querystar.client import _client_connection
+
+
 def add_row(spreadsheet_id: str,
             worksheet_id: int,
             data: list):
@@ -11,7 +15,7 @@ def add_row(spreadsheet_id: str,
     Google API reference: https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
     Request: 
         POST https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}/values/{range}:append
-    
+
     Path parameters:
         spreadsheetId = spreadsheet_id
         range = worksheet_id (in A1 notation: https://developers.google.com/sheets/api/guides/concepts#expandable-1)
@@ -32,4 +36,14 @@ def add_row(spreadsheet_id: str,
                 }
         }
     """
-    pass
+    click.echo('Running:: actions.google_sheets.add_row')
+    payload = {'spreadsheet_id': spreadsheet_id,
+               'worksheet_id': worksheet_id,
+               'data': data}
+
+    data = _client_connection.fire(integration='sheets',
+                                   event='add_row',
+                                   payload=payload)
+
+    click.echo('Finished:: actions.google_sheets.add_row')
+    return data
