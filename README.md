@@ -39,6 +39,7 @@ pip install querystar
 ```
 
 ### Setup Slack (or other apps) Connection 
+
 This step takes 3-5 mins:
 - Crete a free account at [querystar.io](https://querystar.io)
 - Add any SaaS tools that you want to automate in your QueryStar workspace. (Head over to [quickstart](https://querystar.io/docs/quickstart/token/#step-2-connect-to-slack) in our docs for instructions.)
@@ -51,6 +52,7 @@ This step takes 3-5 mins:
 
 
 ### Build and Run a Bot
+
 - Create a new file `app.py` and add this code:
   ```py
   # app.py
@@ -68,7 +70,8 @@ This step takes 3-5 mins:
   querystar run app.py
   ```
 
-# Get Inspired
+## Get Inspired
+
 Because you use Python, there's much more you can build.
 
 - A LLM-powered (Large Language Model) Slack bot: [tutorial](https://querystar.io/docs/tutorials/llamaindex-doc-bot/).
