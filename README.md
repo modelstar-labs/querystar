@@ -1,6 +1,6 @@
 # 👋 Hi there, this is <a href="https://querystar.io/" style="color: #AF3BEA;"><img src="./assets/logo.png" height="28"> QueryStar</a> 
 
-#### Python-First Solution to Develop Bots
+### Python-First Solution to Develop Bots
 
 QueryStar lets you easily set up triggers and actions to automate workflows.
 
@@ -30,14 +30,15 @@ QueryStar can help you:
 
 <img src="https://raw.githubusercontent.com/modelstar-labs/querystar/readme/assets/readme-demo-short.gif" alt="Slack-GSheets Automation" width=500 href="none"></img>
 
+## Get Started
 
-## Installation
+### Installation
 
 ```
 pip install querystar
 ```
 
-## Setup Slack (or other apps) Connection 
+### Setup Slack (or other apps) Connection 
 This step takes 3-5 mins:
 - Crete a free account at [querystar.io](https://querystar.io)
 - Add any SaaS tools that you want to automate in your QueryStar workspace. (Head over to [quickstart](https://querystar.io/docs/quickstart/token/#step-2-connect-to-slack) in our docs for instructions.)
@@ -49,8 +50,8 @@ This step takes 3-5 mins:
 > QueryStar takes care of 3rd party API integration. It only monitors trigger events and passes action data back to the apps of your choice. Your data is **NOT** stored or logged in any form or capacity. Please see [Privacy Policy](https://querystar.io/Privacy) for more details.
 
 
-## Build and Run a Bot
-- Create an `app.py` file in your current folder, and add this code:
+### Build and Run a Bot
+- Create a new file `app.py` and add this code:
   ```py
   # app.py
   import querystar as qs
@@ -59,7 +60,7 @@ This step takes 3-5 mins:
   print(message)
   ```
 
-- Add QueryStar app to your Slack channel, and the channel ID ([Instruction](https://querystar.io/docs/quickstart/coding/#step-2-add-querystar-app-to-the-channel))
+- Add QueryStar app to your Slack channel, and copy the channel ID ([Instruction](https://querystar.io/docs/quickstart/coding/#step-2-add-querystar-app-to-the-channel))
 - Replace `MyChannelID` with the channel id. 
 - Run the bot:
   
