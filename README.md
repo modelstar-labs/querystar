@@ -6,7 +6,11 @@ QueryStar lets you easily set up triggers and actions to automate workflows.
 
 <img src="https://raw.githubusercontent.com/modelstar-labs/querystar/main/assets/diagram.png" alt="Slack-GSheets Automation" width=500 href="none"></img>
 
-Something like "saving Slack new messages that must contain 'hello' to a Google sheet" can be done as easily as:
+Something like 
+
+> Saving Slack new messages that must contain 'hello' to a Google sheet
+
+can be easily done:
 ```python
 # bot.py
 import querystar as qs
@@ -67,7 +71,7 @@ This step takes 3-5 mins:
 - Run the bot:
   
   ```bash
-  querystar run app.py
+  $ querystar run app.py
   ```
 
 ## Get Inspired
