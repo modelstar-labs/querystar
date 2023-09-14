@@ -1,6 +1,12 @@
-# Hi there, this is <a href="https://querystar.io/" style="color: #AF3BEA;"><img src="./assets/logo.png" height="28"> QueryStar</a> 👋
+# 👋 Hi there, this is <a href="https://querystar.io/" style="color: #AF3BEA;"><img src="./assets/logo.png" height="28"> QueryStar</a> 
 
-### QueryStar is the easiest way for data and Python developers to ship AI-powered bots.
+### Python-first solution to develop bots
+
+QueryStar lets you 
+- Automate workflows
+- Slack bots
+
+
 
 ![How does QueryStar work?](./assets/diagram.png)
 
