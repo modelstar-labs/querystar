@@ -1,4 +1,3 @@
-import time
 import querystar as qs
 from pprint import pprint
 
