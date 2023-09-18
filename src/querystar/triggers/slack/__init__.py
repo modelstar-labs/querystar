@@ -124,9 +124,82 @@ def new_reaction(channel_id: str = None,
     :param str user_id: trigger if event['user'] matches the given user id
     :param bool trigger_for_message_only: when this is set to True, trigger if event['item']['type']=='message'
 
-    Note: 
-    All filters are composited using 'AND' logic
     Reaction_added event message API: https://api.slack.com/events/reaction_added
+
     Scopes: reactions:read
     """
-    pass
+
+    logger.info('Subscribed TRIGGER - slack.new_reaction')
+    logger.info('Listening TRIGGER - slack.new_reaction')
+
+    filter_params = {
+        'channel_id': channel_id,
+        'message_ts': message_ts,
+        'reaction': reaction,
+        'user_id': user_id,
+        'trigger_for_message_only': trigger_for_message_only
+    }
+
+    def filter_function(data: dict, filter_params: dict):
+        # Check for channel_id
+        filter_channel_id = filter_params.get('channel_id')
+        if filter_channel_id:
+            channel_id = data.get('item', {}).get('channel', None)
+            if channel_id:
+                if data['item']['channel'] != filter_channel_id:
+                    return False
+            else:
+                return False
+
+        # Check for message_ts
+        filter_message_ts = filter_params.get('message_ts')
+        if filter_message_ts:
+            message_ts = data.get('item', {}).get('ts', None)
+            if message_ts:
+                if data['item']['ts'] != filter_message_ts:
+                    return False
+            else:
+                return False
+
+        # Check for reaction
+        filter_reaction = filter_params.get('reaction')
+        if filter_reaction:
+            reaction = data.get('reaction', None)
+            if reaction:
+                if data['reaction'] != filter_reaction:
+                    return False
+            else:
+                return False
+
+        # Check for user_id
+        filter_user_id = filter_params.get('user_id')
+        if filter_user_id:
+            user_id = data.get('user', None)
+            if user_id:
+                if data['user'] != filter_user_id:
+                    return False
+            else:
+                return False
+
+        # Check for trigger_for_message_only
+        # if trigger_for_message_only = False => return True
+        # if trigger_for_message_only = True => if message => return True
+        filter_trigger_for_message_only = filter_params.get(
+            'trigger_for_message_only')
+        if filter_trigger_for_message_only:
+            type = data.get('item', {}).get('type', None)
+            if type:
+                if data['item']['type'] != 'message':
+                    return False
+            else:
+                return False
+
+        return True
+
+    data = _client_connection.listen(integration='slack',
+                                     event='new_reaction',
+                                     filter_function=filter_function,
+                                     filter_params=filter_params)
+
+    logger.info('Recieved TRIGGER - slack.new_reaction')
+    return data
