@@ -1,5 +1,7 @@
-import click
 from querystar.client import _client_connection
+import logging
+
+logger = logging.getLogger("querystar")
 
 
 def add_row(spreadsheet_id: str,
@@ -36,7 +38,7 @@ def add_row(spreadsheet_id: str,
                 }
         }
     """
-    click.echo('Running:: actions.google_sheets.add_row')
+    logger.info('Started ACTION - google_sheets.add_row')
     payload = {'spreadsheet_id': spreadsheet_id,
                'worksheet_id': worksheet_id,
                'data': data}
@@ -45,5 +47,5 @@ def add_row(spreadsheet_id: str,
                                    event='add_row',
                                    payload=payload)
 
-    click.echo('Finished:: actions.google_sheets.add_row')
+    logger.info('Finished ACTION - google_sheets.add_row')
     return data

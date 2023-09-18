@@ -1,5 +1,7 @@
-import click
+import logging
 from querystar.client import _client_connection
+
+logger = logging.getLogger("querystar")
 
 
 def add_message(channel_id: str,
@@ -16,8 +18,8 @@ def add_message(channel_id: str,
     Scopes: chat:write, chat:write:user, chat:write:bot
     Rate limit: 1 per second, short burst ok, but no guarantee to send.
     """
-    click.echo('Running:: actions.slack.add_message')
-    payload = {'channel': channel_id,                
+    logger.info('Started ACTION - slack.add_message')
+    payload = {'channel': channel_id,
                'reply_broadcast': reply_broadcast}
     if text is not None:
         payload['text'] = text
@@ -25,13 +27,13 @@ def add_message(channel_id: str,
         payload['attachments'] = attachments
     if blocks is not None:
         payload['blocks'] = blocks
-    
+
     if thread_ts != '':
         payload['thread_ts'] = thread_ts
     data = _client_connection.fire(integration='slack',
                                    event='add_message',
                                    payload=payload)
-    click.echo('Finished:: actions.slack.add_message')
+    logger.info('Finished ACTION - slack.add_message')
     return data
 
 
@@ -41,12 +43,12 @@ def find_user(user_id: str):
     HTTP API: https://api.slack.com/methods/users.info
     Scopes: users:read    
     """
-    click.echo('Running:: actions.slack.find_user')
+    logger.info('Started ACTION - slack.find_user')
     payload = {'user': user_id}
     data = _client_connection.fire(integration='slack',
                                    event='find_user',
                                    payload=payload)
-    click.echo('Finished:: actions.slack.find_user')
+    logger.info('Finished ACTION - slack.find_user')
     return data
 
 
@@ -56,12 +58,12 @@ def find_permalink(channel_id: str, message_ts: str):
     HTTP API: https://api.slack.com/methods/chat.getPermalink
     Scopes: None
     """
-    click.echo('Running:: actions.slack.find_permalink')
+    logger.info('Started ACTION - slack.find_permalink')
     payload = {'channel': channel_id, 'message_ts': message_ts}
     data = _client_connection.fire(integration='slack',
                                    event='find_permalink',
                                    payload=payload)
-    click.echo('Finished:: actions.slack.find_permalink')
+    logger.info('Finished ACTION - slack.find_permalink')
     return data
 
 
@@ -75,11 +77,11 @@ def find_message(query: str,
     Scopes: search:read
     Rate limit: 20+ per minute, occasional busts ok, ideally <50
     """
-    click.echo('Running:: actions.slack.find_message')
+    logger.info('Started ACTION - slack.find_message')
     payload = {'query': query, 'count': count,
                'sort': sort, 'sort_dir': sort_direction}
     data = _client_connection.fire(integration='slack',
                                    event='find_message',
                                    payload=payload)
-    click.echo('Finished:: actions.slack.find_message')
+    logger.info('Finished ACTION - slack.find_message')
     return data

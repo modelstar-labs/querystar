@@ -1,5 +1,7 @@
-import click
+import logging
 from querystar.client import _client_connection
+
+logger = logging.getLogger("querystar")
 
 
 def new_message(channel_id: str = None,
@@ -25,7 +27,8 @@ def new_message(channel_id: str = None,
 
     Scopes: channels:history, groups:history
     """
-    click.echo('Running:: triggers.slack.new_message')
+    logger.info('Subscribed TRIGGER - slack.new_message')
+    logger.info('Listening TRIGGER - slack.new_message')
 
     filter_params = {
         'channel_id': channel_id,
@@ -105,15 +108,15 @@ def new_message(channel_id: str = None,
                                      filter_function=filter_function,
                                      filter_params=filter_params)
 
-    click.echo('Finished:: triggers.slack.new_message')
+    logger.info('Recieved TRIGGER - slack.new_message')
     return data
 
 
 def new_reaction(channel_id: str = None,
-                message_ts: str = None,
-                reaction: str = None,
-                user_id: str = None,
-                trigger_for_message_only = True):
+                 message_ts: str = None,
+                 reaction: str = None,
+                 user_id: str = None,
+                 trigger_for_message_only=True):
     """
     :param str channel_id: trigger if event['item']['channel'] matches the given channel
     :param str message_ts: trigger if event['item']['ts'] matches the given ts

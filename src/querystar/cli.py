@@ -3,13 +3,16 @@ import click
 import time
 import types
 import sys
+import logging
 from querystar.commands.run import compile_source_code, build_source_module
 from querystar.exceptions import BadRequestException, UnauthorizedException
 from websockets.exceptions import ConnectionClosedError
 
+logger = logging.getLogger("querystar")
+
 
 @click.group()
-@click.version_option('0.3.2', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
+@click.version_option('0.3.3', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
 @click.pass_context
 def main(ctx):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called
@@ -28,7 +31,7 @@ def run(ctx, target: str):
     querystar run tests/app.py
     '''
 
-    click.echo(f"\nRunning {target}\n")
+    logger.info(f"QueryStar running {target} (Press CTRL+C to quit)")
 
     target_path = os.path.abspath(target)
     bytecode = compile_source_code(target_path)
@@ -45,33 +48,32 @@ def run(ctx, target: str):
             except UnauthorizedException as e:
                 raise e
             except ConnectionClosedError:
-                click.echo(
-                    f"QueryStar stopped by server. Reconnecting...")
+                logger.info("QueryStar stopped by server. Reconnecting...")
                 # TODO: Implement exponential retries
                 _connection_retry_times += 1
                 if _connection_retry_times > 10:
-                    click.echo("Reconnect limit exceeded.")
-                    click.echo(
+                    logger.error("Reconnect limit exceeded.")
+                    logger.error(
                         "Server unresponsive, contact QuerStar support.")
                     sys.exit(0)
                 else:
                     time.sleep(1*(_connection_retry_times+1))
             except ConnectionRefusedError:
-                click.echo(f"QueryStar stopped by server. Reconnecting...")
+                logger.info(f"QueryStar stopped by server. Reconnecting...")
                 # TODO: Implement exponential retries
                 _connection_retry_times += 1
                 if _connection_retry_times > 10:
-                    click.echo("Reconnect limit exceeded.")
-                    click.echo(
+                    logger.error("Reconnect limit exceeded.")
+                    logger.error(
                         "Server unresponsive, contact QuerStar support.")
                     sys.exit(0)
                 else:
                     time.sleep(1)
             except Exception as e:
-                click.echo(f"Error executing '{e}' of type {type(e)}.")
+                logger.error(f"Error executing '{e}' of type {type(e)}.")
                 sys.exit(0)
             # time.sleep(1)
             # break
     except KeyboardInterrupt:
-        click.echo(f"\n\nQueryStar stopped by user.\n")
+        logger.info(f"QueryStar stopped by user.")
         sys.exit(0)
