@@ -4,7 +4,6 @@ from querystar.client import _client_connection
 logger = logging.getLogger("querystar")
 
 
-
 def add_direct_message(user_id: str,
                        text: str,
                        attachments: list = None,
@@ -22,9 +21,21 @@ def add_direct_message(user_id: str,
     Rate limit: 1 per second, short burst ok, but no guarantee to send.
     """
     logger.info('Started ACTION - slack.add_direct_message')
-    # schedule_at
-    # https://docs.google.com/spreadsheets/d/1qSGWVxSSHAde-HkzRy-mgjOGMR8k8N96jWAbHNUlOOk/edit#gid=181882786
-    channel_id = ''
+    # TODO: schedule_at
+
+    conv_open_payload = {'users': user_id}
+    conv_open_data = _client_connection.fire(integration='slack',
+                                             event='add_conversation',
+                                             payload=conv_open_payload)
+    '''
+    {
+    "ok": true,
+    "channel": {
+            "id": "D069C7QFK"
+        }
+    }
+    '''
+    channel_id = conv_open_data['channel']['id']
     payload = {'channel': channel_id,
                'reply_broadcast': reply_broadcast}
     if text is not None:
