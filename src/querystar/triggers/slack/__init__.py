@@ -116,7 +116,7 @@ def new_reaction(channel_id: str = None,
                  message_ts: str = None,
                  reaction: str = None,
                  user_id: str = None,
-                 trigger_for_message_only=True):
+                 trigger_for_message_only: bool = True):
     """
     :param str channel_id: trigger if event['item']['channel'] matches the given channel
     :param str message_ts: trigger if event['item']['ts'] matches the given ts
