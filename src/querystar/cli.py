@@ -12,7 +12,7 @@ logger = logging.getLogger("querystar")
 
 
 @click.group()
-@click.version_option('0.3.6', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
+@click.version_option('0.3.7', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
 @click.pass_context
 def main(ctx):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called
@@ -41,6 +41,8 @@ def run(ctx, target: str):
     try:
         while True:
             try:
+                # Add the folder of the file into exec context to add local imports
+                sys.path.append(os.path.dirname(target_path))
                 exec(bytecode, module.__dict__)
                 _connection_retry_times = 0
             except BadRequestException as e:
