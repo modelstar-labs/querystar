@@ -12,7 +12,7 @@ from querystar.logger import initialize_logger
 
 
 @click.group()
-@click.version_option('0.3.8', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
+@click.version_option('0.3.9', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
 @click.pass_context
 def main(ctx):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called

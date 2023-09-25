@@ -76,4 +76,4 @@ def initialize_logger(rl: bool = False):
             _remote_logger = RemoteLoggerHandler()
             logger.addHandler(_remote_logger)
         except Exception as e:
-            logger.debug(f"No remote logging handler found.")
+            logger.warning(f"No remote logging handler found.")
