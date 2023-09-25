@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "querystar"
-version = "0.3.9"
+version = "0.3.10"
 description = "Python framework for workflow automations."
 authors = ["Adithya Krishnan <krishsandeep@gmail.com>"]
 readme = "README.md"

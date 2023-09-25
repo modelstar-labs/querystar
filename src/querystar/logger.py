@@ -30,8 +30,12 @@ class LoggerFormatter(logging.Formatter):
 
 
 class RemoteLoggerHandler(logging.Handler):
+    def __init__(self, handler):
+        super().__init__()
+
+        self._handler = handler
+
     def emit(self, record: logging.LogRecord):
-        from querystar.remote_logger import posthog
 
         properties = {
             'timestamp': record.created,
@@ -53,7 +57,7 @@ class RemoteLoggerHandler(logging.Handler):
         if record.levelname in ['ERROR', 'CRITICAL']:
             event = record.levelname.lower()
 
-        posthog.capture(
+        self._handler.capture(
             "user_id:org_id",
             event,
             properties
@@ -73,7 +77,8 @@ def initialize_logger(rl: bool = False):
 
     if rl:
         try:
-            _remote_logger = RemoteLoggerHandler()
+            from querystar.remote_logger import posthog
+            _remote_logger = RemoteLoggerHandler(handler=posthog)
             logger.addHandler(_remote_logger)
         except Exception as e:
             logger.warning(f"No remote logging handler found.")
