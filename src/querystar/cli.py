@@ -4,9 +4,10 @@ import time
 import types
 import sys
 import logging
+from websockets.exceptions import ConnectionClosedError
 from querystar.commands.run import compile_source_code, build_source_module
 from querystar.exceptions import BadRequestException, UnauthorizedException
-from websockets.exceptions import ConnectionClosedError
+from querystar.settings import settings
 
 logger = logging.getLogger("querystar")
 
@@ -37,6 +38,9 @@ def run(ctx, target: str):
     bytecode = compile_source_code(target_path)
     module = build_source_module(target_path)
     _connection_retry_times = 0
+
+    app_id = os.path.basename(target_path).split(".")[0]
+    settings.set_app_id(app_id)
 
     try:
         while True:

@@ -10,8 +10,9 @@ from querystar.exceptions import BadRequestException, UnauthorizedException
 
 
 class ClientConnection:
-    def __init__(self):
+    def __init__(self, app_id: str = None):
         self.client_id = str(uuid4())
+        self.app_id = app_id
 
     @staticmethod
     async def _trigger(ws_client_url: str,
@@ -51,7 +52,7 @@ class ClientConnection:
                filter_params: dict = {}) -> dict:
         _host = settings.querystar_server_host
         _ssl = settings.ssl
-        _route = f"client/trigger/{integration}/{event}/{self.client_id}"
+        _route = f"client/trigger/{integration}/{event}/{self.client_id}?app_id={self.app_id}"
         if _ssl:
             _ws_client_url = f"wss://{_host}/{_route}"
         else:
@@ -67,7 +68,7 @@ class ClientConnection:
         }
         _host = settings.querystar_server_host
         _ssl = settings.ssl
-        _route = f"client/action/{integration}/{event}/{self.client_id}"
+        _route = f"client/action/{integration}/{event}/{self.client_id}?app_id={self.app_id}"
         if _ssl:
             _http_client_url = f"https://{_host}/{_route}"
         else:
@@ -87,8 +88,8 @@ class ClientConnection:
             else:
                 _context = 'Unknown error context.'
                 raise BadRequestException(_context)
-            
+
         return json_data
 
 
-_client_connection = ClientConnection()
+_client_connection = ClientConnection(app_id=settings.app_id)

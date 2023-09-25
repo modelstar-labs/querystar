@@ -25,6 +25,7 @@ def get_qs_token():
 
 @dataclass
 class QuerystarSettings():
+    app_id: str = 'app'
     ssl: bool = True
     querystar_server_host: str = 'dev-v1.test.server-xauto.api.querystar.io'
     querystar_token: str = field(init=False)
@@ -41,6 +42,9 @@ class QuerystarSettings():
         console_handler = logging.StreamHandler()
         logger.addHandler(console_handler)
         console_handler.setFormatter(LoggerFormatter())
+
+    def set_app_id(self, app_id: str):
+        self.app_id = app_id
 
 
 settings = QuerystarSettings()
