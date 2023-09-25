@@ -8,12 +8,11 @@ from websockets.exceptions import ConnectionClosedError
 from querystar.commands.run import compile_source_code, build_source_module
 from querystar.exceptions import BadRequestException, UnauthorizedException
 from querystar.settings import settings
-
-logger = logging.getLogger("querystar")
+from querystar.logger import initialize_logger
 
 
 @click.group()
-@click.version_option('0.3.7', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
+@click.version_option('0.3.8', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
 @click.pass_context
 def main(ctx):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called
@@ -26,13 +25,12 @@ def main(ctx):
 
 @main.command("run")
 @click.argument("target", required=True, type=click.Path(exists=True))
+@click.option("--rl", is_flag=True, show_default=True, default=False, help="Remote logging.")
 @click.pass_context
-def run(ctx, target: str):
+def run(ctx, target: str, rl: bool):
     '''
     querystar run tests/app.py
     '''
-
-    logger.info(f"QueryStar running {target} (Press CTRL+C to quit)")
 
     target_path = os.path.abspath(target)
     bytecode = compile_source_code(target_path)
@@ -41,6 +39,12 @@ def run(ctx, target: str):
 
     app_id = os.path.basename(target_path).split(".")[0]
     settings.set_app_id(app_id)
+
+    initialize_logger(rl)
+
+    logger = logging.getLogger("querystar")
+    logger.info(f"QueryStar running {target} (Press CTRL+C to quit)")
+    logger.info('Finished ACTION - slack.add_message')
 
     try:
         while True:

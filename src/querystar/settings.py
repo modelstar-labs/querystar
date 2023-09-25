@@ -1,8 +1,6 @@
 import os
-import logging
 from dataclasses import dataclass, field
 from dotenv import load_dotenv
-from querystar.logger import LoggerFormatter
 
 
 def get_qs_token():
@@ -29,19 +27,11 @@ class QuerystarSettings():
     ssl: bool = True
     querystar_server_host: str = 'dev-v1.test.server-xauto.api.querystar.io'
     querystar_token: str = field(init=False)
+    posthog_api_key: str = 'phc_39QkCwh9pwoIdNdFCxSoaqVG84XphO38WEDKck0MvGp'
+    posthog_api_host: str = 'https://app.posthog.com'
 
     def __post_init__(self):
         self.querystar_token = get_qs_token()
-
-        # Initialize and configure the logger
-        logger = logging.getLogger("querystar")
-        logger.setLevel(logging.INFO)
-        # logger.setLevel(logging.DEBUG)
-
-        # Create a console handler with colored output
-        console_handler = logging.StreamHandler()
-        logger.addHandler(console_handler)
-        console_handler.setFormatter(LoggerFormatter())
 
     def set_app_id(self, app_id: str):
         self.app_id = app_id
