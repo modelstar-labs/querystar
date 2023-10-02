@@ -27,8 +27,6 @@ class QuerystarSettings():
     ssl: bool = True
     querystar_server_host: str = 'dev-v1.test.server-xauto.api.querystar.io'
     querystar_token: str = field(init=False)
-    posthog_api_key: str = 'phc_39QkCwh9pwoIdNdFCxSoaqVG84XphO38WEDKck0MvGp'
-    posthog_api_host: str = 'https://app.posthog.com'
 
     def __post_init__(self):
         self.querystar_token = get_qs_token()

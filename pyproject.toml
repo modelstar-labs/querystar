@@ -19,13 +19,6 @@ click = "^8.1.7"
 websockets = "^11.0.3"
 requests = "^2.31.0"
 python-dotenv = "^1.0.0"
-posthog = {version = "^3.0.2", optional = true}
-python-jose = {version = "^3.3.0", optional = true}
-
-
-[tool.poetry.extras]
-logging = ["posthog", "python-jose"]
-
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
