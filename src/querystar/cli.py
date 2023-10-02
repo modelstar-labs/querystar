@@ -4,6 +4,7 @@ import time
 import types
 import sys
 import logging
+import traceback
 from websockets.exceptions import ConnectionClosedError
 from querystar.commands.run import compile_source_code, build_source_module
 from querystar.exceptions import BadRequestException, UnauthorizedException
@@ -12,7 +13,7 @@ from querystar.logger import initialize_logger
 
 
 @click.group()
-@click.version_option('0.3.11', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
+@click.version_option('0.3.13', message=f'\n{click.style("QueryStar", fg="magenta")}, installed version: {click.style("%(version)s", fg="magenta")}\n')
 @click.pass_context
 def main(ctx):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called
@@ -25,9 +26,9 @@ def main(ctx):
 
 @main.command("run")
 @click.argument("target", required=True, type=click.Path(exists=True))
-@click.option("--rl", is_flag=True, show_default=True, default=False, help="Remote logging.")
+@click.option("--fl", is_flag=True, show_default=True, default=False, help="Enable logging to local file: <app_id>.log.")
 @click.pass_context
-def run(ctx, target: str, rl: bool):
+def run(ctx, target: str, fl: bool):
     '''
     querystar run tests/app.py
     '''
@@ -40,7 +41,7 @@ def run(ctx, target: str, rl: bool):
     app_id = os.path.basename(target_path).split(".")[0]
     settings.set_app_id(app_id)
 
-    initialize_logger(rl)
+    initialize_logger(app_id, fl=fl)
 
     logger = logging.getLogger("querystar")
     logger.info(f"QueryStar running {target} (Press CTRL+C to quit)")
@@ -53,8 +54,14 @@ def run(ctx, target: str, rl: bool):
                 exec(bytecode, module.__dict__)
                 _connection_retry_times = 0
             except BadRequestException as e:
+                logger.error(f"Error executing '{e}' of type {type(e)}.")
+                tb_str = traceback.format_exc()
+                logger.error(tb_str)
                 raise e
             except UnauthorizedException as e:
+                logger.error(f"Error executing '{e}' of type {type(e)}.")
+                tb_str = traceback.format_exc()
+                logger.error(tb_str)
                 raise e
             except ConnectionClosedError:
                 logger.info("QueryStar stopped by server. Reconnecting...")
@@ -80,6 +87,8 @@ def run(ctx, target: str, rl: bool):
                     time.sleep(1)
             except Exception as e:
                 logger.error(f"Error executing '{e}' of type {type(e)}.")
+                tb_str = traceback.format_exc()
+                logger.error(tb_str)
                 sys.exit(0)
             # time.sleep(1)
             # break

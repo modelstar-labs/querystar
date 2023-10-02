@@ -64,7 +64,18 @@ class RemoteLoggerHandler(logging.Handler):
         )
 
 
-def initialize_logger(rl: bool = False):
+class FileHandler(logging.Handler):
+    def __init__(self, filename, mode='a'):
+        super().__init__()
+        self.filename = filename
+        self.mode = mode
+
+    def emit(self, record):
+        with open(self.filename, self.mode) as f:
+            f.write(self.format(record) + '\n')
+
+
+def initialize_logger(app_id: str, fl: bool = False):
     # Initialize and configure the logger
     logger = logging.getLogger("querystar")
     logger.setLevel(logging.INFO)
@@ -72,13 +83,24 @@ def initialize_logger(rl: bool = False):
 
     # Create a console handler with colored output
     console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
     console_handler.setFormatter(LoggerFormatter())
     logger.addHandler(console_handler)
 
-    if rl:
-        try:
-            from querystar.remote_logger import posthog
-            _remote_logger = RemoteLoggerHandler(handler=posthog)
-            logger.addHandler(_remote_logger)
-        except Exception as e:
-            logger.warning(f"No remote logging handler found.")
+    if fl:
+        # Add file logger handler
+        file_log_format = '[%(asctime)s] %(levelname)s : %(message)s'
+        file_handler = logging.FileHandler(f'{app_id}.log', mode='a')
+        file_handler.setLevel(logging.DEBUG)
+        file_formatter = logging.Formatter(
+            file_log_format, datefmt='%Y-%m-%d %H:%M:%S')
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
+
+        # # Remote logger handler
+        # try:
+        #     from querystar.remote_logger import posthog
+        #     _remote_logger = RemoteLoggerHandler(handler=posthog)
+        #     logger.addHandler(_remote_logger)
+        # except Exception as e:
+        #     logger.warning(f"No remote logging handler found.")
