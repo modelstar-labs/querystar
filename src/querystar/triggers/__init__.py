@@ -1,2 +1,2 @@
 from querystar.triggers.time import time
-from querystar.triggers import slack, social
+from querystar.triggers import slack, reddit
